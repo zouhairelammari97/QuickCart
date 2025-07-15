@@ -1,28 +1,12 @@
 import { serve } from "inngest/next";
+import { inngest, syncUserCreation, syncUserDeletion, syncUserUpdation } from "@/config/inngest";
 
-export const dynamic = "force-dynamic"; // 👈 مهم فـ Next.js 13+ App Router
-
-// Lazy imports
-const handler = async () => {
-  const { inngest, syncUserCreation, syncUserDeletion, syncUserUpdation } = await import("@/config/inngest");
-
-  return serve({
-    client: inngest,
-    functions: [syncUserCreation, syncUserUpdation, syncUserDeletion],
-  });
-};
-
-export const GET = async (...args) => {
-  const { GET } = await handler();
-  return GET(...args);
-};
-
-export const POST = async (...args) => {
-  const { POST } = await handler();
-  return POST(...args);
-};
-
-export const PUT = async (...args) => {
-  const { PUT } = await handler();
-  return PUT(...args);
-};
+// Create an API that serves zero functions
+export const { GET, POST, PUT } = serve({
+  client: inngest,
+  functions: [
+    syncUserCreation,
+    syncUserUpdation,
+    syncUserDeletion
+  ],
+});
